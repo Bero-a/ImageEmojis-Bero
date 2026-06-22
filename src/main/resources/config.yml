@@ -51,7 +51,7 @@ suggestionMode: "TEMPLATES"
 templateFormat: ":<emoji>:"
 
 # Should the plugin merge the "emojis.zip" resource pack with the server resource pack?
-# If "true", you should put your resource pack in the "/plugins/ImageEmojis/" directory.
+# If "true", you should put your resource pack in the "/plugins/ImageEmojis-Bero/" directory.
 # The output will be generated within the "emojis.zip" archive.
 mergeWithServerResourcePack: false
 # Name of the resource pack to merge "emojis.zip" with.
