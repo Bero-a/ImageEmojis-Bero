@@ -14,6 +14,11 @@ public class Configuration extends MessageConfigurationBase {
         return getString("serverIp");
     }
 
+    // 이모지 커스텀 경로
+    public String emojisFolder() {
+        return getString("emojisFolder");
+    }
+
     public int webServerPort() {
         return getInt("webServerPort");
     }

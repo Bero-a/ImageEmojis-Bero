@@ -30,7 +30,10 @@ public class EmojiRepository implements IEmojiRepository {
     public List<EmojiModel> getEmojis() {
         if (cachedEmojis != null) return cachedEmojis;
 
-        File emojisFolder = new File(plugin.getDataFolder(), "emojis");
+        // 이모지 커스텀 경로
+        String emojisFolderDirectory = plugin.getDataFolder().getAbsolutePath() + config.emojisFolder();
+
+        File emojisFolder = new File(emojisFolderDirectory);
 
         File[] files = emojisFolder.listFiles();
 
