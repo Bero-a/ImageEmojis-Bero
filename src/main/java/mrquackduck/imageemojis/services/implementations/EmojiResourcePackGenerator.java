@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 public class EmojiResourcePackGenerator implements IResourcePackGenerator {
     private final ImageEmojisPlugin plugin;
@@ -27,6 +28,7 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
     private final List<EmojiModel> emojis;
     private final IZipBuilder zipBuilder;
     private final Gson gson;
+    private final Logger logger;
 
     public EmojiResourcePackGenerator(ImageEmojisPlugin plugin) {
         this.plugin = plugin;
@@ -34,6 +36,7 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
         this.emojis = plugin.getEmojiRepository().getEmojis();
         this.zipBuilder = new ZipFileBuilder();
         this.gson = new GsonBuilder().setPrettyPrinting().create();
+        this.logger = plugin.getLogger();
     }
 
     @Override
@@ -44,6 +47,7 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
         if (mergeWithServerResourcePack) {
             String mergeServerResourcePackName = config.mergeServerResourcePackName();
             String pathToResourcePackToMerge = pluginDirectory.getAbsolutePath() + "/" + mergeServerResourcePackName;
+            logger.info("Merging server resource packs: " + pathToResourcePackToMerge);
             zipBuilder.mergeWithZip(pathToResourcePackToMerge);
         }
 
