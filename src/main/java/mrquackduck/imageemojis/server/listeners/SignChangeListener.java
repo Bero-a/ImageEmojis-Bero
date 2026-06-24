@@ -88,7 +88,7 @@ public class SignChangeListener implements Listener {
             }
 
             event.line(i, signLine);
-            sign.setEditable(true);
+            sign.setWaxed(false);
         }
 
         if (shouldNoPermMessageAppear) player.sendMessage(config.getMessage("not-enough-permissions"));

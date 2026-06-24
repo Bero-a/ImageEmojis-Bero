@@ -35,7 +35,7 @@ public class PluginInitializer {
     }
 
     private void createEmojisFolderIfNotExists() {
-        File emojiFolder = new File(plugin.getDataFolder(), "emojis");
+        File emojiFolder = new File(plugin.getDataFolder(), "resized_emojis");
         if (!emojiFolder.exists()) {
             if (emojiFolder.mkdirs()) plugin.getLogger().info("Created emojis folder.");
             else plugin.getLogger().warning("Failed to create emojis folder.");

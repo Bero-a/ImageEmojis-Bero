@@ -57,6 +57,20 @@ public class EmojiRepository implements IEmojiRepository {
 
         int parentCount = 0;
         int childCount = 0;
+        int failedCount = 0;
+        int emojiCount = 0;
+
+        File resizedEmojisFolder = new File(plugin.getDataFolder() + "/resized_emojis");
+
+        if (resizedEmojisFolder.exists() && resizedEmojisFolder.isDirectory()) {
+            File[] resizedEmojis = resizedEmojisFolder.listFiles();
+
+            if (resizedEmojis != null) {
+                for (File resizedEmoji : resizedEmojis) {
+                    resizedEmoji.delete();
+                }
+            }
+        }
 
         for (File file : files) {
             // 한 단계 더 안으로 들어가도록 변경
@@ -64,11 +78,11 @@ public class EmojiRepository implements IEmojiRepository {
             if (!file.isDirectory()) continue;
             File[] subFiles = file.listFiles();
             if (subFiles == null) return emojis;
-            parentCount += 1;
+            parentCount++;
             for (File subFile : subFiles) {
                 if (!subFile.isFile()) continue;
                 if (!isPng(subFile)) {
-                    logger.warning(String.format("Skipping '%s'. Only 'png'-native image files are supported. Try converting into 'png'.", subFile.getName()));
+                    failedCount++;
                     continue;
                 }
 
@@ -90,21 +104,20 @@ public class EmojiRepository implements IEmojiRepository {
                         g2d.drawImage(image, 0, 0, 256, 256, null);
                         g2d.dispose(); // 리소스 해제
 
-                        outputFile = new File(plugin.getDataFolder() + "/emojis/" + (subFile.getName().substring(0, subFile.getName().lastIndexOf('.'))) + "_resized.png");
+                        outputFile = new File(plugin.getDataFolder() + "/resized_emojis/" + (subFile.getName().substring(0, subFile.getName().lastIndexOf('.'))) + "_resized.png");
 
                         ImageIO.write(resizedImage, "png", outputFile);
                     }
 
-                    childCount += 1;
+                    childCount++;
+                    emojiCount++;
 
-//                    subFile.getParentFile()
-//                            .getName() + "/" +
-                    String iconName =  subFile.getName();
+                    String iconName = subFile.getParentFile()
+                            .getName() + "/" + subFile.getName();
                     String name =  iconName
                             .substring(0, iconName
-                                    .lastIndexOf('.'))
-                            .toLowerCase();
-                    String fileName = parentCount + "-" + childCount;
+                                    .lastIndexOf('.'));
+                    String fileName = parentCount + "-" + childCount + ".png";
 
                     // Generating a hash based on the file name
                     String fileNameHash = CharUtil.generateSHA256(fileName);
@@ -121,6 +134,9 @@ public class EmojiRepository implements IEmojiRepository {
                     logger.warning("Failed to read image file: " + subFile.getName());
                 }
             }
+            childCount = 0;
+            logger.warning(String.format("Skipping %d files in %s. Only 'png'-native image files are supported. Try converting into 'png'.", failedCount, file.getName()));
+            failedCount = 0;
         }
 
 

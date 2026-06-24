@@ -22,5 +22,6 @@ public class ServerComponentRegistrar {
         manager.registerEvents(new JoinListener(plugin), plugin);
         manager.registerEvents(new AnvilRenameListener(plugin), plugin);
         manager.registerEvents(new SignChangeListener(plugin), plugin);
+        manager.registerEvents(new BlueMapWebChatListener(plugin), plugin);
     }
 }
