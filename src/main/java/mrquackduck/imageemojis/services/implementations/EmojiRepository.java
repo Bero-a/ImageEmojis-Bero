@@ -58,7 +58,7 @@ public class EmojiRepository implements IEmojiRepository {
         int parentCount = 0;
         int childCount = 0;
         int failedCount = 0;
-        int emojiCount = 0;
+        long currentImageCode = rangeStart;
 
         File resizedEmojisFolder = new File(plugin.getDataFolder() + "/resized_emojis");
 
@@ -75,11 +75,17 @@ public class EmojiRepository implements IEmojiRepository {
         for (File file : files) {
             // 한 단계 더 안으로 들어가도록 변경
             logger.info("Loading emojis for " + file.getName());
+            if (currentImageCode >= rangeEnd) {
+                logger.warning("The maximum number of emojis has been reached.");
+                break;
+            }
             if (!file.isDirectory()) continue;
             File[] subFiles = file.listFiles();
             if (subFiles == null) return emojis;
             parentCount++;
             for (File subFile : subFiles) {
+                if (currentImageCode >= rangeEnd) break;
+
                 if (!subFile.isFile()) continue;
                 if (!isPng(subFile)) {
                     failedCount++;
@@ -110,7 +116,6 @@ public class EmojiRepository implements IEmojiRepository {
                     }
 
                     childCount++;
-                    emojiCount++;
 
                     String iconName = subFile.getParentFile()
                             .getName() + "/" + subFile.getName();
@@ -119,11 +124,15 @@ public class EmojiRepository implements IEmojiRepository {
                                     .lastIndexOf('.'));
                     String fileName = parentCount + "-" + childCount + ".png";
 
-                    // Generating a hash based on the file name
-                    String fileNameHash = CharUtil.generateSHA256(fileName);
+//                    해시 대신 순차 저장하도록 변경
+//                    // Generating a hash based on the file name
+//                    String fileNameHash = CharUtil.generateSHA256(fileName);
+//
+//                    // Applying the hash on certain UTF-8 range in order to get a unique UTF-8 code for the emoji
+//                    String utf8Code = CharUtil.parseLongToUtf8Code(CharUtil.hashToRange(fileNameHash, rangeStart, rangeEnd));
 
-                    // Applying the hash on certain UTF-8 range in order to get a unique UTF-8 code for the emoji
-                    String utf8Code = CharUtil.parseLongToUtf8Code(CharUtil.hashToRange(fileNameHash, rangeStart, rangeEnd));
+                    String utf8Code = CharUtil.parseLongToUtf8Code(currentImageCode);
+                    currentImageCode++;
 
                     int height = image.getHeight();
                     String absolutePath = outputFile.getAbsolutePath();
@@ -135,8 +144,10 @@ public class EmojiRepository implements IEmojiRepository {
                 }
             }
             childCount = 0;
-            logger.warning(String.format("Skipping %d files in %s. Only 'png'-native image files are supported. Try converting into 'png'.", failedCount, file.getName()));
-            failedCount = 0;
+            if (failedCount > 0) {
+                logger.warning(String.format("Skipping %d files in %s. Only 'png'-native image files are supported. Try converting into 'png'.", failedCount, file.getName()));
+                failedCount = 0;
+            }
         }
 
 

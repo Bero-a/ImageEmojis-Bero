@@ -65,7 +65,9 @@ public class CharUtil {
         try { digest = MessageDigest.getInstance("SHA-256"); }
         catch (NoSuchAlgorithmException e) { throw new RuntimeException(e); }
 
-        byte[] hashBytes = digest.digest(input.getBytes());
+        digest.update(input.getBytes());
+
+        byte[] hashBytes = digest.digest();
 
         StringBuilder hexString = new StringBuilder();
         for (byte b : hashBytes) {
