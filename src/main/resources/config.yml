@@ -20,6 +20,10 @@ replaceInAnvils: true
 replaceOnSigns: true
 # Replace emojis when sending a command? (e.g., in the "/msg" or "/say" commands)
 replaceInCommands: true
+# 명령 블록을 수정할 때 이모지를 대채할지 여부 (예: "/title" 또는 "/tellraw" 명령어)
+replaceInCommandBlocks: true
+# 책과 깃펜의 내용을 수정할 때 이모지를 대채할지 여부 (예: 책과 깃펜을 서명할 떄)
+replaceInBooks: true
 
 # What will happen if a player doesn't have the "imageemojis.use" permission?:
 # ERASE_EMOJIS - Erase all emojis from payload and proceed.

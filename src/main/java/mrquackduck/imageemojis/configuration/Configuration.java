@@ -39,6 +39,18 @@ public class Configuration extends MessageConfigurationBase {
         return getBoolean("replaceInCommands");
     }
 
+    // 명령 블록
+    public boolean isCommandBlockReplacementEnabled() {
+        return getBoolean("replaceInCommandBlocks");
+    }
+
+    // 책과 깃펜
+    public boolean isBookReplacementEnabled() {
+        return getBoolean("replaceInBooks");
+    }
+
+
+
     public NoPermAction inChatNoPermAction() {
         return getEnumValue("noPermAction.inChat", NoPermAction.class, NoPermAction.ERASE_EMOJIS);
     }
