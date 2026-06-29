@@ -2,7 +2,6 @@ package mrquackduck.imageemojis.server.listeners;
 
 import mrquackduck.imageemojis.ImageEmojisPlugin;
 import mrquackduck.imageemojis.configuration.Configuration;
-import mrquackduck.imageemojis.configuration.Permissions;
 import mrquackduck.imageemojis.types.models.EmojiModel;
 import mrquackduck.imageemojis.utils.ColorUtil;
 import mrquackduck.imageemojis.utils.TextComponentUtil;
@@ -11,25 +10,20 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.BroadcastMessageEvent;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public class BlueMapWebChatListener implements Listener {
     private final ImageEmojisPlugin plugin;
     private final Configuration config;
-    private final Logger logger;
 
     public BlueMapWebChatListener(ImageEmojisPlugin plugin) {
         this.plugin = plugin;
         this.config = new Configuration(plugin);
-        this.logger = plugin.getLogger();
     }
     @EventHandler(
             priority = EventPriority.HIGHEST,

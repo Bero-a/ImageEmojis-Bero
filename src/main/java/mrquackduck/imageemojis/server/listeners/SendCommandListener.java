@@ -27,6 +27,7 @@ public class SendCommandListener implements Listener {
         if (!config.isCommandReplacementEnabled()) return;
 
         Player player = event.getPlayer();
+
         List<EmojiModel> emojis = plugin.getEmojiRepository().getEmojis();
 
         String command = event.getMessage();

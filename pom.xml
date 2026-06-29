@@ -6,7 +6,7 @@
 
   <groupId>mrquackduck</groupId>
   <artifactId>ImageEmojis-Bero</artifactId>
-  <version>1.6.3</version>
+  <version>1.7.0</version>
   <packaging>jar</packaging>
 
   <name>ImageEmojis</name>
@@ -123,6 +123,12 @@
           <groupId>net.kyori</groupId>
           <artifactId>adventure-api</artifactId>
           <version>4.18.0</version>
+      </dependency>
+      <dependency>
+          <groupId>net.dmulloy2</groupId>
+          <artifactId>ProtocolLib</artifactId>
+          <version>5.4.0</version>
+          <scope>provided</scope>
       </dependency>
   </dependencies>
 </project>

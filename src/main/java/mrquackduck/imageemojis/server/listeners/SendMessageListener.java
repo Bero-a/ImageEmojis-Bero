@@ -70,7 +70,7 @@ public class SendMessageListener implements Listener {
      * An event handler compatible with Spigot chat formatters
      */
     @SuppressWarnings("deprecation")
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOW)
     public void onMessageSent(AsyncPlayerChatEvent event) {
         Player player = event.getPlayer();
         List<EmojiModel> emojis = plugin.getEmojiRepository().getEmojis();
