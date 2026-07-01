@@ -1,7 +1,9 @@
 package mrquackduck.imageemojis.discord.listeners;
 
+import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.GameChatMessagePostProcessEvent;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Emote;
 import mrquackduck.imageemojis.ImageEmojisPlugin;
 import mrquackduck.imageemojis.configuration.Permissions;
 import mrquackduck.imageemojis.types.models.EmojiModel;
@@ -32,6 +34,11 @@ public class SendGameMessageListener {
                 replacement = "\\:" + emoji.getName() + "\\:";
                 processedMessage = processedMessage.replace(defaultTemplate, replacement);
                 continue;
+            }
+
+            Emote matchingDiscordEmote = DiscordSRV.getPlugin().getMainGuild().getEmotes().stream().filter(emote -> emoji.getName().equalsIgnoreCase(emote.getName())).findFirst().orElse(null);
+            if (matchingDiscordEmote != null) {
+                replacement = ':' + matchingDiscordEmote.getName() + ':';
             }
 
             processedMessage = processedMessage

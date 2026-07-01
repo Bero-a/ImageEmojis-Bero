@@ -2,6 +2,7 @@ package mrquackduck.imageemojis.discord.listeners;
 
 import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.DiscordGuildMessagePostProcessEvent;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Emote;
 import github.scarsz.discordsrv.dependencies.kyori.adventure.text.Component;
 import github.scarsz.discordsrv.dependencies.kyori.adventure.text.TextComponent;
 import github.scarsz.discordsrv.dependencies.kyori.adventure.text.TextReplacementConfig;
@@ -30,12 +31,16 @@ public final class SendDiscordMessageListener {
 
         for (EmojiModel emoji : emojis) {
             if (emoji.getChars().isEmpty()) continue;
+
+            Emote matchingDiscordEmote = event.getGuild().getEmotes().stream().filter(emote -> emoji.getName().equalsIgnoreCase(emote.getName())).findFirst().orElse(null);
+            if (matchingDiscordEmote == null) continue;
+
             TextComponent replacement = Component.text(emoji.getAsUtf8Symbol());
             if (config.isEmojiHoverEnabled()) replacement = replacement.hoverEvent(HoverEvent.showText(Component.text(emoji.getTemplate()).color(TextColor.color(ColorUtil.hexToColor(config.emojiHoverColor())))));
 
-            // The replacement config to replace the emoji template to an actual emoji
+            // The replacement config to replace the emoji template to an actual Discord emote
             TextReplacementConfig templateToUtf8ReplacementConfig = TextReplacementConfig.builder()
-                    .match(':' + emoji.getName() + ':')
+                    .match(':' + matchingDiscordEmote.getName() + ':')
                     .replacement(replacement)
                     .build();
 
