@@ -48,10 +48,9 @@ public class EmojisListCommand implements CommandExecutor {
 
         List<Component> pages = getPages(emojis);
 
-        bookMeta = bookMeta.toBuilder()
-                .author(Component.text(""))
-                .title(Component.text(""))
-                .pages(pages).build();
+        bookMeta.author(Component.text(""));
+        bookMeta.title(Component.text(""));
+        bookMeta.pages(pages.toArray(new Component[0]));
 
         itemStack.setItemMeta(bookMeta);
         return itemStack;

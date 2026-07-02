@@ -38,13 +38,14 @@ public class BookEditListener implements Listener {
         List<Component> pageComponents = newBookMeta.pages();
         List<Component> newPageComponents = new ArrayList<>();
 
-        for (int i = 0; i < pageComponents.size(); i++) {
-            Component pageComponent = pageComponents.get(i);
-
+        for (Component pageComponent : pageComponents) {
             for (EmojiModel emoji : emojis) {
-                if (emoji.getChars().isEmpty()) continue;
+                if (emoji.getChars()
+                        .isEmpty()) continue;
                 TextComponent replacement = Component.text(emoji.getAsUtf8Symbol());
-                if (config.isEmojiHoverEnabled()) replacement = replacement.hoverEvent(HoverEvent.showText(Component.text(emoji.getTemplate()).color(TextColor.color(ColorUtil.hexToColor(config.emojiHoverColor())))));
+                if (config.isEmojiHoverEnabled())
+                    replacement = replacement.hoverEvent(HoverEvent.showText(Component.text(emoji.getTemplate())
+                                                                                     .color(TextColor.color(ColorUtil.hexToColor(config.emojiHoverColor())))));
                 if (!player.hasPermission(Permissions.USE)) replacement = Component.empty();
 
                 // The replacement config to replace the emoji template to an actual emoji
@@ -69,7 +70,7 @@ public class BookEditListener implements Listener {
         }
 
 
-        BookMeta modifiedBookMeta = (BookMeta) newBookMeta.pages(newPageComponents);
+        BookMeta modifiedBookMeta = newBookMeta.pages(newPageComponents);
         event.setNewBookMeta(modifiedBookMeta);
     }
 }
