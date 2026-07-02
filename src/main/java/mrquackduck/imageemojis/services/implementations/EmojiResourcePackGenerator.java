@@ -51,7 +51,7 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
             zipBuilder.mergeWithZip(pathToResourcePackToMerge);
         }
 
-        zipBuilder.addFile("/pack.mcmeta", generateMcPack());
+        zipBuilder.addFile("/pack.mcmeta", generateMcPackRespectingMerge(mergeWithServerResourcePack));
         zipBuilder.addDirectory("/assets");
         zipBuilder.addDirectory("/assets/minecraft");
         zipBuilder.addDirectory("/assets/minecraft/font");
@@ -64,7 +64,7 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
         }
         zipBuilder.addFile("/assets/minecraft/font/default.json", defaultJson);
         copyEmojisToZip(); // Copy all emojis to zip
-        copyPackPng(); // Copy resource pack icon to the root folder
+        copyPackPng(mergeWithServerResourcePack); // Copy resource pack icon to the root folder, unless the merged pack already has one
 
         String path = pluginDirectory.getAbsolutePath() + "/emojis.zip";
         zipBuilder.writeToPath(path);
@@ -72,6 +72,33 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
         byte[] hash = generateSHA1FromFile(new File(path));
 
         return new ResourcePack(path, hash, bytesToHex(hash));
+    }
+
+    /**
+     * Generates 'pack.mcmeta'. If merging with a server resource pack, the merged
+     * pack's existing 'pack.mcmeta' values take priority - the plugin's generated
+     * values only fill in fields that are missing (e.g., description if unset,
+     * or 'pack_format' if the merged pack doesn't specify one)
+     */
+    private String generateMcPackRespectingMerge(boolean mergeWithServerResourcePack) {
+        String generatedMcMeta = generateMcPack();
+
+        if (!mergeWithServerResourcePack) {
+            return generatedMcMeta;
+        }
+
+        try {
+            String existingMcMeta = zipBuilder.getFileContent("/pack.mcmeta");
+            String merged = JsonUtil.mergeJsons(existingMcMeta, generatedMcMeta);
+
+            // mergeJsons returns null if the existing pack.mcmeta couldn't be parsed
+            if (merged != null) return merged;
+
+            return generatedMcMeta;
+        } catch (RuntimeException ex) {
+            // No existing pack.mcmeta in the merged pack - fall back to plugin defaults
+            return generatedMcMeta;
+        }
     }
 
     private String generateMcPack() {
@@ -109,8 +136,21 @@ public class EmojiResourcePackGenerator implements IResourcePackGenerator {
         return json;
     }
 
-    private void copyPackPng() {
+    private void copyPackPng(boolean mergeWithServerResourcePack) {
+        if (mergeWithServerResourcePack && zipHasFile("/pack.png")) {
+            return; // Merged pack already provides its own icon - keep it
+        }
+
         zipBuilder.copyFile(plugin.getDataFolder().getAbsolutePath() + "/pack.png", "/pack.png");
+    }
+
+    private boolean zipHasFile(String path) {
+        try {
+            zipBuilder.getFileContent(path);
+            return true;
+        } catch (RuntimeException ex) {
+            return false;
+        }
     }
 
     private void copyEmojisToZip() {

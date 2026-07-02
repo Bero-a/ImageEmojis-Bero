@@ -50,7 +50,7 @@ public class EmojisListCommand implements CommandExecutor {
 
         bookMeta.author(Component.text(""));
         bookMeta.title(Component.text(""));
-        bookMeta.pages(pages.toArray(new Component[0]));
+        bookMeta.addPages(pages.toArray(new Component[0]));
 
         itemStack.setItemMeta(bookMeta);
         return itemStack;
