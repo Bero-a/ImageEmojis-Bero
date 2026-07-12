@@ -4,7 +4,7 @@
   <groupId>mrquackduck</groupId>
   <artifactId>ImageEmojis-Bero</artifactId>
   <name>ImageEmojis</name>
-  <version>1.8.0</version>
+  <version>1.8.2</version>
   <build>
     <resources>
       <resource>
@@ -37,7 +37,7 @@
   </build>
   <repositories>
     <repository>
-      <id>papermc-repo</id>
+      <id>papermc</id>
       <url>https://repo.papermc.io/repository/maven-public/</url>
     </repository>
     <repository>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>io.papermc.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <version>1.20.1-R0.1-SNAPSHOT</version>
+      <version>[26.1.2.build,)</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
